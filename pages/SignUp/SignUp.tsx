@@ -19,6 +19,7 @@ function SignUp() {
           <div>
             <input type="user"></input>
             <i>아이콘자리</i>
+            <button>아이디 중복 체크</button>
           </div>
           <div>형식이 올바르지 않습니다.</div>
           <label>닉네임</label>
@@ -39,7 +40,7 @@ function SignUp() {
             <i>아이콘자리</i>
           </div>
           <div>형식이 올바르지 않습니다.</div>
-          <button>회원가입</button>
+          <button type="submit">회원가입</button>
           <div>
             <div>
               <hr />
