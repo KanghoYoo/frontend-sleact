@@ -1,70 +1,71 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import {
+  Button,
+  Container,
+  DuplicationButton,
+  Footer,
+  Form,
+  Header,
+  Input,
+  Label,
+  LoginMoveDiv,
+  Main,
+  StateDiv,
+} from './SignUpStyles';
 
 function SignUp() {
   return (
-    <div>
-      <header>
+    <Container>
+      <Header>
         <div></div>
-        <Link to="/login">Sleact</Link>
+        <Link to="/login">
+          <img src="https://a.slack-edge.com/cebaa/img/ico/favicon.ico" />
+          <span>sleact</span>
+        </Link>
         <div></div>
-      </header>
-      <div>
+      </Header>
+      <Main>
         <h1>이메일과 비밀번호를 입력해보세요</h1>
         <div>
           <strong>직장에서 사용하는 이메일 주소</strong>로 로그인하는 걸 추천드려요.
         </div>
-        <form>
-          <label>이메일 주소</label>
+        <Form>
+          <Label>이메일 주소</Label>
           <div>
-            <input type="user"></input>
-            <i>아이콘자리</i>
-            <button>아이디 중복 체크</button>
+            <Input type="user"></Input>
+            <DuplicationButton>중복 확인</DuplicationButton>
           </div>
-          <div>형식이 올바르지 않습니다.</div>
-          <label>닉네임</label>
+          <StateDiv>형식이 올바르지 않습니다.</StateDiv>
+          <Label>닉네임</Label>
           <div>
-            <input type="nickname"></input>
-            <i>아이콘자리</i>
+            <Input type="nickname"></Input>
           </div>
-          <div>형식이 올바르지 않습니다.</div>
-          <label>비밀번호</label>
+          <StateDiv>형식이 올바르지 않습니다.</StateDiv>
+          <Label>비밀번호</Label>
           <div>
-            <input type="nickname"></input>
-            <i>아이콘자리</i>
+            <Input type="nickname"></Input>
           </div>
-          <div>형식이 올바르지 않습니다.</div>
-          <label>비밀번호 확인</label>
+          <StateDiv>형식이 올바르지 않습니다.</StateDiv>
+          <Label>비밀번호 확인</Label>
           <div>
-            <input type="nickname"></input>
-            <i>아이콘자리</i>
+            <Input type="nickname"></Input>
           </div>
-          <div>형식이 올바르지 않습니다.</div>
-          <button type="submit">회원가입</button>
-          <div>
-            <div>
-              <hr />
-              <div> 또는 </div>
-              <hr />
-            </div>
-          </div>
-          <div>
-            <button>카카오 로그인</button>
-          </div>
-          <div>
-            <div>아이디가 이미 존재하시나요?</div>
-            <Link to="/login">로그인페이지로 이동</Link>
-          </div>
-        </form>
-      </div>
-      <div>
-        <footer>
-          <a></a>
-          <a></a>
-          <div></div>
-        </footer>
-      </div>
-    </div>
+          <StateDiv>형식이 올바르지 않습니다.</StateDiv>
+          <Button type="submit">회원가입</Button>
+          <hr />
+          <LoginMoveDiv>
+            이미 회원이신가요?
+            <Link to="/login">로그인 하러가기</Link>
+          </LoginMoveDiv>
+        </Form>
+      </Main>
+      <Footer>
+        <div>개인정보 보호 및 약관</div>
+        <div>문의하기</div>
+        <div>지역 변경</div>
+      </Footer>
+    </Container>
   );
 }
 
