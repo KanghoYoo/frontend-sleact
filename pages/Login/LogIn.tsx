@@ -3,10 +3,17 @@ import axios from 'axios';
 import React, { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Container, Footer, Form, Header, Input, Label, LoginMoveDiv, Main, StateDiv } from './LogInStyles';
+import fetcher from '@utils/fetcher';
+import useSWR from 'swr';
 
 function LogIn() {
+  const { data, error, revalidate } = useSWR('http://localhost:3095/api/users', fetcher);
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
+
+  const EMAIL_REGEX =
+    /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+
   const onSubmit = useCallback(
     (e) => {
       e.preventDefault();
@@ -23,6 +30,7 @@ function LogIn() {
               },
             )
             .then((response) => {
+              revalidate();
               console.log(response);
               console.log('로그인 성공');
             })
@@ -32,9 +40,10 @@ function LogIn() {
     },
     [email, password],
   );
-  const EMAIL_REGEX =
-    /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
+  if (data === undefined) {
+    return <div>로딩중...</div>;
+  }
   return (
     <Container>
       <Header>
