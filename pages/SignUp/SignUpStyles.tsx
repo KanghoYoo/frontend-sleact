@@ -74,7 +74,7 @@ export const Input = styled.input`
 `;
 
 export const StateDiv = styled.div`
-  /* visibility: ${({ value }: { value?: string }) => (value === '' ? 'hidden' : 'visible')}; */
+  visibility: ${({ value }: { value?: string }) => !value && 'hidden'};
   margin-bottom: 15px;
   height: 14px;
   font-size: 14px;
