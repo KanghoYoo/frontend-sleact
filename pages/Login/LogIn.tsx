@@ -1,13 +1,13 @@
 import useInput from '@hooks/useinput';
 import axios from 'axios';
 import React, { useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { Button, Container, Footer, Form, Header, Input, Label, LoginMoveDiv, Main, StateDiv } from './LogInStyles';
 import fetcher from '@utils/fetcher';
 import useSWR from 'swr';
 
 function LogIn() {
-  const { data, error, revalidate } = useSWR('http://localhost:3095/api/users', fetcher);
+  const { data, error, mutate } = useSWR('http://localhost:3095/api/users', fetcher);
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
 
@@ -30,9 +30,8 @@ function LogIn() {
               },
             )
             .then((response) => {
-              revalidate();
-              console.log(response);
-              console.log('로그인 성공');
+              window.alert('로그인 되었습니다.');
+              mutate();
             })
             .catch((error) => {
               window.alert(error.response.data);
@@ -41,9 +40,14 @@ function LogIn() {
     [email, password],
   );
 
+  if (data) {
+    return <Redirect to="/workspace/channel" />;
+  }
+
   if (data === undefined) {
     return <div>로딩중...</div>;
   }
+
   return (
     <Container>
       <Header>
