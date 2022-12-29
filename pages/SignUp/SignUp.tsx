@@ -1,5 +1,7 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import useInput from '@hooks/useinput';
+import axios from 'axios';
+import React, { useCallback, useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import {
   Button,
   Container,
@@ -15,6 +17,65 @@ import {
 } from './SignUpStyles';
 
 function SignUp() {
+  const [email, onChangeEmail] = useInput('');
+  const [nickname, onChangeNickname] = useInput('');
+  const [password, , setPassword] = useInput('');
+  const [passwordCheck, , setPasswordCheck] = useInput('');
+  const [mismatchError, setMismatchError] = useState(false);
+
+  const EMAIL_REGEX =
+    /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+  // 영문, 숫자, 특수문자 혼합 8-20자리 이내 비밀번호
+  const PASSWORDS_REGEX = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/;
+
+  const history = useHistory();
+
+  const onChangePassword = useCallback(
+    (e) => {
+      setPassword(e.target.value);
+      setMismatchError(e.target.value !== passwordCheck);
+    },
+    [passwordCheck],
+  );
+
+  const onChangePasswordCheck = useCallback(
+    (e) => {
+      setPasswordCheck(e.target.value);
+      setMismatchError(e.target.value !== password);
+    },
+    [password],
+  );
+
+  const onSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      if (!mismatchError && nickname) {
+        console.log('서버로 회원가입하기');
+        axios
+          .post('http://localhost:3095/api/users', {
+            email,
+            nickname,
+            password,
+          })
+          .then((response) => {
+            console.log(response);
+            console.log('회원가입 성공');
+            window.alert('회원 가입에 성공하였습니다. 로그인을 해보세요!');
+            history.push('/login');
+          })
+          .catch((error) => {
+            console.log(error.response);
+            console.log('회원가입 실패');
+            window.alert(error.response.data);
+          })
+          .finally(() => {});
+      } else {
+        window.alert('기입하신 정보를 확인 후 다시 시도 해주세요.');
+      }
+    },
+    [email, nickname, password, passwordCheck, mismatchError],
+  );
+
   return (
     <Container>
       <Header>
@@ -26,32 +87,49 @@ function SignUp() {
         <div></div>
       </Header>
       <Main>
-        <h1>이메일과 비밀번호를 입력해보세요</h1>
+        <h1>이메일과 닉네임, 비밀번호를 입력해보세요</h1>
         <div>
-          <strong>직장에서 사용하는 이메일 주소</strong>로 로그인하는 걸 추천드려요.
+          <strong>직장에서 사용하는 이메일 주소</strong>로 회원가입 하는 걸 추천드려요.
         </div>
-        <Form>
-          <Label>이메일 주소</Label>
+        <Form onSubmit={onSubmit}>
+          <Label id="email-label">이메일 주소</Label>
           <div>
-            <Input type="user"></Input>
-            <DuplicationButton>중복 확인</DuplicationButton>
+            <Input type="email" id="email" name="email" value={email} onChange={onChangeEmail}></Input>
           </div>
-          <StateDiv>형식이 올바르지 않습니다.</StateDiv>
-          <Label>닉네임</Label>
+          {!EMAIL_REGEX.test(email) ? (
+            <StateDiv value={email}>이메일 형식이 일치하지 않습니다!</StateDiv>
+          ) : (
+            <StateDiv />
+          )}
+          <Label id="nickname-label">닉네임</Label>
           <div>
-            <Input type="nickname"></Input>
+            <Input type="text" id="nickname" name="nickname" value={nickname} onChange={onChangeNickname}></Input>
           </div>
-          <StateDiv>형식이 올바르지 않습니다.</StateDiv>
-          <Label>비밀번호</Label>
+          {!nickname ? <StateDiv value={nickname}>닉네임을 입력해주세요!</StateDiv> : <StateDiv />}
+          <Label id="password-label">비밀번호</Label>
           <div>
-            <Input type="nickname"></Input>
+            <Input type="password" id="password" name="password" value={password} onChange={onChangePassword}></Input>
           </div>
-          <StateDiv>형식이 올바르지 않습니다.</StateDiv>
-          <Label>비밀번호 확인</Label>
+          {!PASSWORDS_REGEX.test(password) ? (
+            <StateDiv value={password}>영문, 숫자, 특수문자를 포함하여 8자리 이상으로 해주세요!</StateDiv>
+          ) : (
+            <StateDiv></StateDiv>
+          )}
+          <Label id="password-check-label">비밀번호 확인</Label>
           <div>
-            <Input type="nickname"></Input>
+            <Input
+              type="password"
+              id="password-check"
+              name="password-check"
+              value={passwordCheck}
+              onChange={onChangePasswordCheck}
+            ></Input>
           </div>
-          <StateDiv>형식이 올바르지 않습니다.</StateDiv>
+          {mismatchError ? (
+            <StateDiv value={passwordCheck}>비밀번호가 일치하지 않습니다!</StateDiv>
+          ) : (
+            <StateDiv></StateDiv>
+          )}
           <Button type="submit">회원가입</Button>
           <hr />
           <LoginMoveDiv>
