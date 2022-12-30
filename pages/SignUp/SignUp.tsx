@@ -3,7 +3,7 @@ import fetcher from '@utils/fetcher';
 import useSWR from 'swr';
 import axios from 'axios';
 import React, { useCallback, useState } from 'react';
-import { Link, Redirect, useHistory } from 'react-router-dom';
+import { Link, Navigate, Route, Routes } from 'react-router-dom';
 import {
   Button,
   Container,
@@ -31,8 +31,6 @@ function SignUp() {
     /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
   // 영문, 숫자, 특수문자 혼합 8-20자리 이내 비밀번호
   const PASSWORDS_REGEX = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/;
-
-  const history = useHistory();
 
   const onChangePassword = useCallback(
     (e) => {
@@ -80,7 +78,7 @@ function SignUp() {
   );
 
   if (data) {
-    return <Redirect to="/workspace/channel"></Redirect>;
+    return <Navigate replace to="/workspace/channel" />;
   }
 
   return (
