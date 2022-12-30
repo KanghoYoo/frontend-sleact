@@ -1,7 +1,9 @@
-import useInput from '@hooks/useinput';
+import useInput from '@hooks/useInput';
+import fetcher from '@utils/fetcher';
+import useSWR from 'swr';
 import axios from 'axios';
 import React, { useCallback, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, Navigate, Route, Routes } from 'react-router-dom';
 import {
   Button,
   Container,
@@ -17,6 +19,8 @@ import {
 } from './SignUpStyles';
 
 function SignUp() {
+  const { data, error, mutate } = useSWR('/api/users', fetcher);
+
   const [email, onChangeEmail] = useInput('');
   const [nickname, onChangeNickname] = useInput('');
   const [password, , setPassword] = useInput('');
@@ -27,8 +31,6 @@ function SignUp() {
     /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
   // 영문, 숫자, 특수문자 혼합 8-20자리 이내 비밀번호
   const PASSWORDS_REGEX = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/;
-
-  const history = useHistory();
 
   const onChangePassword = useCallback(
     (e) => {
@@ -61,7 +63,6 @@ function SignUp() {
             console.log(response);
             console.log('회원가입 성공');
             window.alert('회원 가입에 성공하였습니다. 로그인을 해보세요!');
-            history.push('/login');
           })
           .catch((error) => {
             console.log(error.response);
@@ -75,6 +76,10 @@ function SignUp() {
     },
     [email, nickname, password, passwordCheck, mismatchError],
   );
+
+  if (data) {
+    return <Navigate replace to="/workspace/channel" />;
+  }
 
   return (
     <Container>
