@@ -1,19 +1,19 @@
 import loadable from '@loadable/component';
 import React from 'react';
-import { Switch, Route, Redirect } from 'react-router';
+import { Route, Routes, Navigate } from 'react-router';
 
 const LogIn = loadable(() => import('@pages/Login/LogIn'));
 const SignUp = loadable(() => import('@pages/SignUp/SignUp'));
-const Channel = loadable(() => import('@pages/Channel/Channel'));
+const Workspace = loadable(() => import('@layouts/Workspace/Workspace'));
 
 const App = () => {
   return (
-    <Switch>
-      <Redirect exact path="/" to="/login" />
-      <Route path="/login" component={LogIn} />
-      <Route path="/signup" component={SignUp} />
-      <Route path="/workspace/channel" component={Channel} />
-    </Switch>
+    <Routes>
+      <Route path="/" element={<Navigate replace to="/login" />} />
+      <Route path="/login" element={<LogIn></LogIn>} />
+      <Route path="/signup" element={<SignUp></SignUp>} />
+      <Route path="/workspace/*" element={<Workspace></Workspace>} />
+    </Routes>
   );
 };
 
