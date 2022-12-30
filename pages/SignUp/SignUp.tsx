@@ -1,4 +1,4 @@
-import useInput from '@hooks/useinput';
+import useInput from '@hooks/useInput';
 import fetcher from '@utils/fetcher';
 import useSWR from 'swr';
 import axios from 'axios';

@@ -1,10 +1,11 @@
-import useInput from '@hooks/useinput';
+import useInput from '@hooks/useInput';
 import axios from 'axios';
 import React, { useCallback } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { Button, Container, Footer, Form, Header, Input, Label, LoginMoveDiv, Main, StateDiv } from './LogInStyles';
 import fetcher from '@utils/fetcher';
 import useSWR from 'swr';
+import loadable from '@loadable/component';
 
 function LogIn() {
   const { data, error, mutate } = useSWR('http://localhost:3095/api/users', fetcher);
@@ -41,7 +42,7 @@ function LogIn() {
   );
 
   if (data) {
-    return <Redirect to="/workspace/channel" />;
+    return <Redirect to="/workspace" />;
   }
 
   if (data === undefined) {
