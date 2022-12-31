@@ -8,7 +8,7 @@ import useSWR from 'swr';
 import loadable from '@loadable/component';
 
 function LogIn() {
-  const { data, error, mutate } = useSWR('http://localhost:3095/api/users', fetcher);
+  const { data, error, mutate } = useSWR('/api/users', fetcher);
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
 
@@ -42,7 +42,7 @@ function LogIn() {
   );
 
   if (data) {
-    return <Navigate replace to="/workspace/channel" />;
+    return <Navigate replace to="/workspace/sleact/channel/일반" />;
   }
 
   if (data === undefined) {

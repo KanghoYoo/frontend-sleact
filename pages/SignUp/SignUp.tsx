@@ -54,19 +54,15 @@ function SignUp() {
       if (!mismatchError && nickname) {
         console.log('서버로 회원가입하기');
         axios
-          .post('http://localhost:3095/api/users', {
+          .post('/api/users', {
             email,
             nickname,
             password,
           })
           .then((response) => {
-            console.log(response);
-            console.log('회원가입 성공');
             window.alert('회원 가입에 성공하였습니다. 로그인을 해보세요!');
           })
           .catch((error) => {
-            console.log(error.response);
-            console.log('회원가입 실패');
             window.alert(error.response.data);
           })
           .finally(() => {});
@@ -78,7 +74,7 @@ function SignUp() {
   );
 
   if (data) {
-    return <Navigate replace to="/workspace/channel" />;
+    return <Navigate replace to="/workspace/sleact/channel/일반" />;
   }
 
   return (
