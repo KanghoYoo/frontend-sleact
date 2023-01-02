@@ -9,6 +9,8 @@ import useSWR from 'swr';
 import { IoTriangle } from 'react-icons/io5';
 import { GoPrimitiveDot } from 'react-icons/go';
 import gravatar from 'gravatar';
+import useSocket from '@hooks/useSocket';
+import EachDM from '@components/EachDM/EachDM';
 
 const DMList: FC = () => {
   const { workspace } = useParams<{ workspace?: string }>();
@@ -23,7 +25,7 @@ const DMList: FC = () => {
     userData ? `/api/workspaces/${workspace}/members` : null,
     fetcher,
   );
-  // const [socket] = useSocket(workspace);
+  const [socket] = useSocket(workspace);
   const [channelCollapse, setChannelCollapse] = useState(false);
   const [onlineList, setOnlineList] = useState<number[]>([]);
 
@@ -32,22 +34,21 @@ const DMList: FC = () => {
   }, []);
 
   useEffect(() => {
-    console.log('DMList: workspace 바꼈다', workspace);
     setOnlineList([]);
   }, [workspace]);
 
-  // useEffect(() => {
-  //   socket?.on('onlineList', (data: number[]) => {
-  //     setOnlineList(data);
-  //   });
-  //   // socket?.on('dm', onMessage);
-  //   // console.log('socket on dm', socket?.hasListeners('dm'), socket);
-  //   return () => {
-  //     // socket?.off('dm', onMessage);
-  //     // console.log('socket off dm', socket?.hasListeners('dm'));
-  //     socket?.off('onlineList');
-  //   };
-  // }, [socket]);
+  useEffect(() => {
+    socket?.on('onlineList', (data: number[]) => {
+      setOnlineList(data);
+    });
+    // socket?.on('dm', onMessage);
+    // console.log('socket on dm', socket?.hasListeners('dm'), socket);
+    return () => {
+      // socket?.off('dm', onMessage);
+      // console.log('socket off dm', socket?.hasListeners('dm'));
+      socket?.off('onlineList');
+    };
+  }, [socket]);
 
   return (
     <>
@@ -65,18 +66,7 @@ const DMList: FC = () => {
         {!channelCollapse &&
           memberData?.map((member) => {
             const isOnline = onlineList.includes(member.id);
-            return (
-              <NavLink
-                key={member.id}
-                className={({ isActive }) => '' + (isActive ? 'selected' : '')}
-                to={`/workspace/${workspace}/dm/${member.id}`}
-              >
-                <img src={gravatar.url(member.nickname, { s: '18px', d: 'retro' })} alt={member.nickname} />
-                <GoPrimitiveDot color={isOnline ? 'green' : 'gray'}></GoPrimitiveDot>
-                <span style={{ marginLeft: '5px' }}>{member.nickname}</span>
-                {member.id === userData?.id && <span> (나)</span>}
-              </NavLink>
-            );
+            return <EachDM key={member.id} member={member} isOnline={isOnline} />;
           })}
       </div>
     </>
