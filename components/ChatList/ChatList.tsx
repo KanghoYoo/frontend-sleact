@@ -13,7 +13,6 @@ const ChatList = forwardRef<Scrollbars, Props>(({ chatSections, setSize, isReach
   const onScroll = useCallback(
     (values) => {
       if (values.scrollTop === 0 && !isReachingEnd) {
-        console.log('가장 위');
         setSize((prevSize) => prevSize + 1).then(() => {
           // 스크롤 위치 유지
           const current = (scrollRef as MutableRefObject<Scrollbars>)?.current;
@@ -35,9 +34,7 @@ const ChatList = forwardRef<Scrollbars, Props>(({ chatSections, setSize, isReach
               <StickyHeader>
                 <button>{date}</button>
               </StickyHeader>
-              {chats.map((chat) => (
-                <Chat key={chat.id} data={chat} />
-              ))}
+              {chats && chats.map((chat) => <Chat key={chat.id} data={chat} />)}
             </Section>
           );
         })}
