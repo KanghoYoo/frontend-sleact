@@ -11,6 +11,7 @@ interface Props {
 }
 
 const BACK_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:3095' : 'https://sleact.nodebird.com';
+
 const Chat: VFC<Props> = ({ data }) => {
   const { workspace } = useParams<{ workspace: string; channel: string }>();
   const user = 'Sender' in data ? data.Sender : data.User;
@@ -28,7 +29,11 @@ const Chat: VFC<Props> = ({ data }) => {
             const arr: string[] | null = match.match(/@\[(.+?)]\((\d+?)\)/)!;
             if (arr) {
               return (
-                <Link key={match + index} to={`/workspace/${workspace}/dm/${arr[2]}`}>
+                <Link
+                  key={match + index}
+                  to={`/workspace/${workspace}/dm/${arr[2]}`}
+                  style={{ textDecoration: 'none', color: 'grey', backgroundColor: 'skyblue' }}
+                >
                   @{arr[1]}
                 </Link>
               );
